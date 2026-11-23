@@ -1,0 +1,6 @@
+The data files in data/ are licensed under the Creative Commons Attribution 4.0
+International License (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+They are district-level aggregates derived from public sources (INEI, TerraClimate,
+SoilGrids, Copernicus GLO-90, MIDAGRI, MODIS, Malaria Atlas Project). When using them,
+cite this repository and the original sources listed in data-raw/FUENTES.md.

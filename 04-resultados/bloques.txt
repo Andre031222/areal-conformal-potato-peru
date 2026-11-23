@@ -1,0 +1,6 @@
+fecha: 2026-11-16
+islas unidas: 2; componentes: 1
+rango blockCV (km): 25.5; rango práctico exponencial usado (km): 144.9
+k = 20; distritos por pliegue: mín 16, mediana 85, máx 157
+pliegues con al menos 5 distritos de sierra: 19
+negativos (y_tau1 = 0) por pliegue: 36 13 24 5 14 9 16 14 17 16 56 22 52 15 46 59 29 44 37 35

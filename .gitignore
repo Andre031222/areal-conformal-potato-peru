@@ -1,0 +1,57 @@
+# Only reproducible code, district-level data and figures are published.
+00-gestion/
+01-articulo/
+
+# Datos: se publican solo los agregados distritales; las fuentes crudas (GB) se descargan con data-raw/
+data/*
+!data/README.md
+!data/SOURCES.md
+!data/tabla_distrital_2012.csv
+!data/ubigeo_2023_a_2012.csv
+!data/etiqueta_papa_distrito_2012.csv
+!data/clima_pisco_distrito_2012.csv
+!data/limites/
+data/limites/*
+!data/limites/distritos_2012.gpkg
+
+# Figuras: se publica el PNG; PDF y TIFF se regeneran con 03-codigo/05_figuras.R
+figuras/*.pdf
+figuras/*.tiff
+
+# Resultados pesados: se regeneran con los scripts (y se archivan en Zenodo al publicar)
+04-resultados/simulacion/partes/
+04-resultados/simulacion/*.rds
+04-resultados/aplicacion/pliegues/
+04-resultados/**/*.log
+*.rds
+
+# Figuras TIFF (se regeneran a 600 dpi con 03-codigo/05_figuras.R)
+*.tiff
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.spl
+*.synctex.gz
+
+# Sistema
+.DS_Store
+.Rhistory
+.RData
+
+# Paquetes temporales
+*.zip
+
+# RStudio
+.Rproj.user/
+
+# Entorno de Python para las figuras
+.venv/
+
+# Local project files
+*.Rproj
