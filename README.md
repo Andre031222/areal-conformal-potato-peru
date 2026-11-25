@@ -1,8 +1,8 @@
-# Agricultural suitability of potato across Peru from a calibrated Bayesian areal model
+# Mapping potato suitability and its uncertainty across the districts of Peru with a calibrated Bayesian model
 
-**Agricultural suitability of potato across Peru from a calibrated Bayesian areal model** (submitted to *Spatial Statistics*, manuscript SPASTA-D-26-00551)
+**Mapping potato suitability and its uncertainty across the districts of Peru with a calibrated Bayesian model** (submitted to *Computers and Electronics in Agriculture*)
 
-[![Journal](https://img.shields.io/badge/Journal-Spatial%20Statistics%20(Elsevier%2C%20Q1)-E9711C?style=flat-square&logo=elsevier&logoColor=white)](https://www.sciencedirect.com/journal/spatial-statistics)
+[![Journal](https://img.shields.io/badge/Journal-Computers%20and%20Electronics%20in%20Agriculture%20(Elsevier%2C%20Q1)-E9711C?style=flat-square&logo=elsevier&logoColor=white)](https://www.sciencedirect.com/journal/computers-and-electronics-in-agriculture)
 [![Status](https://img.shields.io/badge/Status-With%20editor-7B1FA2?style=flat-square)](#status)
 [![Data DOI](https://img.shields.io/badge/Data%20%26%20code-10.17632%2Fmcp876jbyt.1-1565C0?style=flat-square)](https://doi.org/10.17632/mcp876jbyt.1)
 [![Data](https://img.shields.io/badge/Data-IV%20CENAGRO%202012%20%C2%B7%201783%20districts-1565C0?style=flat-square)](#data)
@@ -13,7 +13,7 @@
 [![Data: CC BY 4.0](https://img.shields.io/badge/Data-CC%20BY%204.0-337AB7?style=flat-square)](LICENSE-DATA)
 
 Richar Andre Vilca-Solorzano · Vladimiro Ibañez-Quispe · Fred Torres-Cruz
-*Laboratory of Computing in Research, Methodology and Analytics (LaCima), Faculty of Statistical and Computer Engineering, Universidad Nacional del Altiplano de Puno, Peru*
+*Department of Statistical and Informatics Engineering, Universidad Nacional del Altiplano (UNAP), Puno, Peru · Doctoral Program in Sustainable Agriculture, Universidad Nacional Agraria La Molina, Lima, Peru (F. Torres-Cruz)*
 
 ---
 
@@ -146,7 +146,7 @@ The district table combines the IV National Agricultural Census 2012 (INEI), Ter
 | Census application, hypotheses H1, H1b, H2 | Done (all supported) |
 | Sensitivity analyses (7) and spatial confounding check | Done |
 | Figures 1–6 | Done |
-| Manuscript | Submitted to *Spatial Statistics* on 23 November 2026 (SPASTA-D-26-00551); with the editor |
+| Manuscript | Submitted to *Computers and Electronics in Agriculture* on 25 November 2026; with the editor |
 | Data and code on Mendeley Data | [doi:10.17632/mcp876jbyt.1](https://doi.org/10.17632/mcp876jbyt.1) |
 
 ## Citation
@@ -155,7 +155,7 @@ If you use this code or the district table, please cite the dataset (and the ori
 
 > Vilca-Solorzano, R.A., Ibañez-Quispe, V., Torres-Cruz, F., 2026. Data and code for: Agricultural suitability of potato across Peru from a calibrated Bayesian areal model [dataset]. Mendeley Data, V1. https://doi.org/10.17632/mcp876jbyt.1
 
-The article is under review at *Spatial Statistics*; the reference will be added here once it is published. Machine-readable metadata are in [`CITATION.cff`](CITATION.cff).
+The article is under review at *Computers and Electronics in Agriculture*; the reference will be added here once it is published. Machine-readable metadata are in [`CITATION.cff`](CITATION.cff).
 
 ## License
 
@@ -163,4 +163,4 @@ Code: [MIT](LICENSE). Data and figures: [CC BY 4.0](LICENSE-DATA).
 
 ## Contact
 
-Richar Andre Vilca-Solorzano · [andresolorzano@lacima.edu.pe](mailto:andresolorzano@lacima.edu.pe) · ORCID [0009-0003-2385-5263](https://orcid.org/0009-0003-2385-5263)
+Richar Andre Vilca-Solorzano · [andrevilcasolorzano@gmail.com](mailto:andrevilcasolorzano@gmail.com) · ORCID [0009-0003-2385-5263](https://orcid.org/0009-0003-2385-5263)

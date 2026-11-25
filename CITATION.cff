@@ -1,19 +1,19 @@
 cff-version: 1.2.0
 message: "If you use this code or data, please cite it as below."
-title: "Agricultural suitability of potato across Peru from a calibrated Bayesian areal model: code and data"
+title: "Mapping potato suitability and its uncertainty across the districts of Peru with a calibrated Bayesian model: code and data"
 authors:
   - family-names: Vilca-Solorzano
     given-names: Richar Andre
     orcid: "https://orcid.org/0009-0003-2385-5263"
-    affiliation: "LaCima, Faculty of Statistical and Computer Engineering, Universidad Nacional del Altiplano de Puno"
+    affiliation: "Department of Statistical and Informatics Engineering, Universidad Nacional del Altiplano (UNAP)"
   - family-names: Ibañez-Quispe
     given-names: Vladimiro
     orcid: "https://orcid.org/0000-0002-0277-4945"
-    affiliation: "LaCima, Faculty of Statistical and Computer Engineering, Universidad Nacional del Altiplano de Puno"
+    affiliation: "Department of Statistical and Informatics Engineering, Universidad Nacional del Altiplano (UNAP)"
   - family-names: Torres-Cruz
     given-names: Fred
     orcid: "https://orcid.org/0000-0003-0834-6834"
-    affiliation: "LaCima, Faculty of Statistical and Computer Engineering, Universidad Nacional del Altiplano de Puno"
+    affiliation: "Doctoral Program in Sustainable Agriculture, Universidad Nacional Agraria La Molina"
 license: MIT
 keywords: [BYM2, conformal prediction, spatial cross-validation, selective prediction, areal data, crop suitability, Peru]
 doi: "10.17632/mcp876jbyt.1"

@@ -364,37 +364,52 @@ def fig6():
     x0, y0, x1, y1 = pais.total_bounds
     tr = Transformer.from_crs(4326, crs, always_xy=True)
     halo = [pe.withStroke(linewidth=1.5, foreground="white")]
-    fig, axes = plt.subplots(1, 3, figsize=(190 * MM, 104 * MM))
+    from matplotlib.gridspec import GridSpec
+    NOMBRES = {"01": "Amazonas", "02": "Áncash", "03": "Apurímac", "04": "Arequipa", "05": "Ayacucho",
+               "06": "Cajamarca", "08": "Cusco", "09": "Huancavelica", "10": "Huánuco", "11": "Ica",
+               "12": "Junín", "13": "La Libertad", "14": "Lambayeque", "15": "Lima", "16": "Loreto",
+               "17": "Madre de Dios", "18": "Moquegua", "19": "Pasco", "20": "Piura", "21": "Puno",
+               "22": "San Martín", "23": "Tacna", "24": "Tumbes", "25": "Ucayali"}
+    fig = plt.figure(figsize=(190 * MM, 200 * MM))
+    gs = GridSpec(2, 2, width_ratios=[1.75, 1], height_ratios=[1, 1], wspace=0.06, hspace=0.42, figure=fig)
+    ax_a = fig.add_subplot(gs[:, 0]); ax_b = fig.add_subplot(gs[0, 1]); ax_c = fig.add_subplot(gs[1, 1])
 
-    def base(ax, capas, titulo, letra, leyenda, titulo_leyenda, ncol=2):
+    def base(ax, capas, titulo, letra, leyenda, titulo_leyenda, grande=False, ncol=1):
         ax.set_xlim(x0 - 25e3, x1 + 25e3); ax.set_ylim(y0 - 25e3, y1 + 25e3); ax.set_aspect("equal")
         _tinte_relieve(ax, alfa_tinte=0.5)
         for valores, color in capas:
-            d[valores].plot(ax=ax, color=color, lw=0, alpha=0.88, zorder=3, rasterized=True)
-        deps.boundary.plot(ax=ax, color="white", lw=0.35, zorder=4)
-        pais.boundary.plot(ax=ax, color=TINTA2, lw=0.7, zorder=5)
-        for nombre in ("Lima", "Cajamarca", "Cusco", "Puno", "Iquitos"):
-            lon, lat, lado = CIUDADES[nombre]; cx, cy = tr.transform(lon, lat)
-            ax.plot(cx, cy, "o", ms=2.6, mfc="white", mec=TINTA, mew=0.6, zorder=7)
-            ax.text(cx + (22e3 if lado == "right" else -22e3), cy, nombre, ha="left" if lado == "right" else "right",
-                    va="center", fontsize=6.48, color=TINTA, path_effects=halo, zorder=7)
+            d[valores].plot(ax=ax, color=color, lw=0, alpha=0.9, zorder=3, rasterized=True)
+        deps.boundary.plot(ax=ax, color="white", lw=0.7 if grande else 0.35, zorder=4)
+        pais.boundary.plot(ax=ax, color=TINTA2, lw=0.9 if grande else 0.7, zorder=5)
         _marco_geografico(ax, crs)
-        if letra != "a)": ax.set_yticklabels([])
-        _escala_norte(ax)
-        ax.legend(handles=leyenda, title=titulo_leyenda, loc="upper left", bbox_to_anchor=(0.0, -0.07), ncol=ncol,
-                  frameon=False, fontsize=6.84, title_fontsize=7.32, alignment="left", columnspacing=0.8, handletextpad=0.4)
-        ax.set_title(titulo, loc="left", fontsize=8.4, pad=4)
+        if grande:
+            for cod, g in deps.iterrows():
+                if cod not in NOMBRES: continue
+                c = g.geometry.representative_point()
+                ax.text(c.x, c.y, NOMBRES[cod], ha="center", va="center", fontsize=6.4, fontstyle="italic",
+                        color="#2f2e2b", path_effects=[pe.withStroke(linewidth=1.8, foreground="white")], zorder=6)
+            lon, lat, _ = CIUDADES["Lima"]; cx, cy = tr.transform(lon, lat)
+            ax.plot(cx, cy, "*", ms=7, mfc="#f0e442", mec=TINTA, mew=0.6, zorder=7)
+            _escala_norte(ax, fx=0.40, fy=0.02)
+            ax.legend(handles=leyenda, title=titulo_leyenda, loc="lower left", bbox_to_anchor=(0.0, 0.0), ncol=ncol,
+                      frameon=False, fontsize=7.2, title_fontsize=7.6, alignment="left", handletextpad=0.4)
+            ax.set_title(titulo, loc="left", fontsize=9.6, pad=5)
+        else:
+            ax.set_xticklabels([]); ax.yaxis.tick_right()
+            ax.legend(handles=leyenda, title=titulo_leyenda, loc="upper left", bbox_to_anchor=(0.0, -0.02), ncol=ncol,
+                      frameon=False, fontsize=6.6, title_fontsize=7.0, alignment="left", columnspacing=0.8, handletextpad=0.4)
+            ax.set_title(titulo, loc="left", fontsize=8.4, pad=4)
         ax.annotate(letra, xy=(0, 1), xycoords="axes fraction", xytext=(-6, 4), textcoords="offset points",
                     fontsize=10.8, fontweight="bold", ha="right", va="bottom")
 
-    # a: fracción predicha, mismas clases y colores que las burbujas de la figura 1
+    # a: fracción predicha, mismas clases y colores que las burbujas de la figura 1 (panel grande)
     cortes = [0, 0.05, 0.15, 0.30, 0.45, 1.01]
     pal = sns.color_palette("rocket_r", len(cortes) - 1)
     k = np.digitize(d["p_media_m1"], cortes) - 1
     capas = [(k == i, pal[i]) for i in range(len(pal))]
     ley = [Patch(fc=pal[i], label=f"{100 * a:.0f}–{100 * b:.0f}%" if b < 1 else f"{100 * a:.0f}% or more")
            for i, (a, b) in enumerate(zip(cortes[:-1], cortes[1:]))]
-    base(axes[0], capas, "Predicted potato share", "a)", ley, "Cross-validated prediction (model M1)")
+    base(ax_a, capas, "Predicted potato share", "a)", ley, "Predicted share of crop\nrecords with potato (M1)", grande=True)
 
     # b: ancho del intervalo calibrado (incertidumbre)
     cortes = [0, 0.05, 0.15, 0.30, 0.50, 1.0001]
@@ -403,15 +418,14 @@ def fig6():
     capas = [(k == i, pal[i]) for i in range(len(pal))]
     ley = [Patch(fc=pal[i], label=f"{a:.2f}–{b:.2f}" if b < 1 else f"{a:.2f} or more")
            for i, (a, b) in enumerate(zip(cortes[:-1], cortes[1:]))]
-    base(axes[1], capas, "Uncertainty of the prediction", "b)", ley, "Width of the calibrated 90% interval")
+    base(ax_b, capas, "Uncertainty of the prediction", "b)", ley, "Width of the calibrated 90% interval", ncol=2)
 
     # c: decisión
     nc = d["nc_riesgo"].astype(bool); err = d["error"] == 1; pos = d["yhat"] == 1
     clases = [(~nc & ~err & pos, "#2b8a3e", "Potato, correct"), (~nc & ~err & ~pos, "#d9d4c7", "No potato, correct"),
               (~nc & err, COL["nominal"], "Wrong"), (nc, "#5f5e5a", "Inconclusive")]
     ley = [Patch(fc=c, label=f"{t} ({int(m.sum())})") for m, c, t in clases]
-    base(axes[2], [(m, c) for m, c, _ in clases], "Decision of the map", "c)", ley, "Decision with abstention (number of districts)")
-    fig.subplots_adjust(wspace=0.06)
+    base(ax_c, [(m, c) for m, c, _ in clases], "Decision of the map", "c)", ley, "Decision with abstention (districts)", ncol=2)
     guardar(fig, "Fig6_mapa_abstencion")
 
 
@@ -453,9 +467,9 @@ def _marco_geografico(ax, crs):
     ax.set_xlabel(""); ax.set_ylabel("")
 
 
-def _escala_norte(ax):
+def _escala_norte(ax, fx=0.06, fy=0.04):
     x0, x1 = ax.get_xlim(); y0, y1 = ax.get_ylim()
-    xs, ys = x0 + 0.06 * (x1 - x0), y0 + 0.04 * (y1 - y0)
+    xs, ys = x0 + fx * (x1 - x0), y0 + fy * (y1 - y0)
     for k, c in zip(range(3), (TINTA, "white", TINTA)):
         ax.add_patch(mpl.patches.Rectangle((xs + k * 100e3, ys), 100e3, 14e3, fc=c, ec=TINTA, lw=0.5, zorder=8))
     for k, t in ((0, "0"), (300, "300 km")):
@@ -487,92 +501,93 @@ def fig1():
                 for k, (lon, lat, lado) in CIUDADES.items()}
     halo = [pe.withStroke(linewidth=1.6, foreground="white")]
 
-    fig = plt.figure(figsize=(190 * MM, 124 * MM))
-    gs = GridSpec(1, 3, width_ratios=[1, 1, 0.62], wspace=0.10, figure=fig)
+    NOMBRES = {"01": "Amazonas", "02": "Áncash", "03": "Apurímac", "04": "Arequipa", "05": "Ayacucho",
+               "06": "Cajamarca", "08": "Cusco", "09": "Huancavelica", "10": "Huánuco", "11": "Ica",
+               "12": "Junín", "13": "La Libertad", "14": "Lambayeque", "15": "Lima", "16": "Loreto",
+               "17": "Madre de Dios", "18": "Moquegua", "19": "Pasco", "20": "Piura", "21": "Puno",
+               "22": "San Martín", "23": "Tacna", "24": "Tumbes", "25": "Ucayali"}
+    halo_dep = [pe.withStroke(linewidth=1.8, foreground="white")]
 
-    # a: burbujas de superficie de papa, coloreadas por la fracción de registros con papa
-    ax = fig.add_subplot(gs[0])
+    fig = plt.figure(figsize=(190 * MM, 200 * MM))
+    gs = GridSpec(2, 2, width_ratios=[1.75, 1], height_ratios=[1, 1], wspace=0.06, hspace=0.42, figure=fig)
+
+    # a: mapa principal grande; burbujas de superficie de papa coloreadas por la fracción de registros con papa
+    ax = fig.add_subplot(gs[:, 0])
     ax.set_xlim(x0 - 25e3, x1 + 25e3); ax.set_ylim(y0 - 25e3, y1 + 25e3); ax.set_aspect("equal")
     hip, norma = _tinte_relieve(ax)
-    deps.boundary.plot(ax=ax, color="white", lw=0.45, zorder=3)
-    pais.boundary.plot(ax=ax, color=TINTA2, lw=0.7, zorder=4)
+    deps.boundary.plot(ax=ax, color="white", lw=0.7, zorder=3)
+    pais.boundary.plot(ax=ax, color=TINTA2, lw=0.9, zorder=4)
     p = d[d["ha_papa"] > 0].copy(); pt = p.representative_point()
     p = p.assign(px=pt.x, py=pt.y).sort_values("ha_papa", ascending=False)
     cortes = [0, 0.05, 0.15, 0.30, 0.45, 1.01]
     paleta = sns.color_palette("rocket_r", len(cortes) - 1)
     cls = np.digitize(p["frac"], cortes) - 1
-    tam = lambda ha: 1.2 + 0.030 * np.power(ha, 0.88)
+    tam = lambda ha: 2.0 + 0.050 * np.power(ha, 0.88)
     ax.scatter(p["px"], p["py"], s=tam(p["ha_papa"].to_numpy()), c=[paleta[i] for i in cls], edgecolor="white",
-               linewidth=0.25, alpha=0.9, zorder=5, rasterized=True)
-    for nombre, (cx, cy, lado) in ciudades.items():
-        ax.plot(cx, cy, "o", ms=3, mfc="white", mec=TINTA, mew=0.7, zorder=7)
-        ax.text(cx + (25e3 if lado == "right" else -25e3), cy, nombre, ha="left" if lado == "right" else "right", va="center",
-                fontsize=6.96, color=TINTA, path_effects=halo, zorder=7)
-    _marco_geografico(ax, crs); _escala_norte(ax)
-    leg1 = ax.legend(handles=[Line2D([], [], marker="o", lw=0, ms=4.5, mfc=c, mec="white", mew=0.3,
+               linewidth=0.3, alpha=0.9, zorder=5, rasterized=True)
+    for cod, g in deps.iterrows():
+        if cod not in NOMBRES: continue
+        c = g.geometry.representative_point()
+        ax.text(c.x, c.y, NOMBRES[cod], ha="center", va="center", fontsize=6.4, fontstyle="italic",
+                color="#3d3c39", path_effects=halo_dep, zorder=6)
+    lx, ly, _ = ciudades["Lima"]
+    ax.plot(lx, ly, "*", ms=7, mfc="#f0e442", mec=TINTA, mew=0.6, zorder=7)
+    _marco_geografico(ax, crs); _escala_norte(ax, fx=0.40, fy=0.02)
+    leg1 = ax.legend(handles=[Line2D([], [], marker="o", lw=0, ms=5.5, mfc=c, mec="white", mew=0.3,
                                      label=f"{100 * a:.0f}–{100 * b:.0f}%" if b < 1 else f"{100 * a:.0f}% or more")
                               for a, b, c in zip(cortes[:-1], cortes[1:], paleta)],
-                     title="Records with potato", loc="lower left", bbox_to_anchor=(0.0, -0.36), ncol=2,
-                     frameon=False, fontsize=6.96, title_fontsize=7.44, alignment="left", columnspacing=0.8, handletextpad=0.2)
+                     title="Crop records with potato", loc="lower left", bbox_to_anchor=(0.0, 0.0), ncol=1,
+                     frameon=False, fontsize=7.2, title_fontsize=7.6, alignment="left", handletextpad=0.3)
     ax.add_artist(leg1)
     ax.legend(handles=[plt.scatter([], [], s=tam(h), color="#bdbdbd", edgecolor=TINTA2, linewidth=0.4, label=f"{h:,} ha")
-                       for h in (500, 2000, 6000)], title="Potato area, 2012", loc="lower left", bbox_to_anchor=(0.0, -0.58), ncol=3,
-              frameon=False, fontsize=6.96, title_fontsize=7.44, labelspacing=1.1, alignment="left", handletextpad=0.6)
-    ax.set_title("Potato in the 2012 census", loc="left", fontsize=8.4, pad=4)
+                       for h in (500, 2000, 6000)], title="Potato area, 2012", loc="lower left", bbox_to_anchor=(0.0, 0.205), ncol=1,
+              frameon=False, fontsize=7.2, title_fontsize=7.6, labelspacing=1.3, alignment="left", handletextpad=0.8, borderpad=0.6)
+    ax.set_title("Potato in the 2012 census", loc="left", fontsize=9.6, pad=5)
     ax.annotate("a)", xy=(0, 1), xycoords="axes fraction", xytext=(-6, 4), textcoords="offset points",
                 fontsize=10.8, fontweight="bold", ha="right", va="bottom")
 
     # b: sierra y bloques de validación sobre el mismo relieve
-    ax = fig.add_subplot(gs[1])
+    ax = fig.add_subplot(gs[0, 1])
     ax.set_xlim(x0 - 25e3, x1 + 25e3); ax.set_ylim(y0 - 25e3, y1 + 25e3); ax.set_aspect("equal")
     _tinte_relieve(ax, alfa_tinte=0.55)
     d[d["sierra"] == 1].plot(ax=ax, color=COL["bloque"], alpha=0.38, lw=0, zorder=3, rasterized=True)
     bloques.boundary.plot(ax=ax, color=TINTA, lw=0.45, zorder=4)
     pais.boundary.plot(ax=ax, color=TINTA2, lw=0.7, zorder=5)
-    _marco_geografico(ax, crs); ax.set_yticklabels([]); _escala_norte(ax)
+    _marco_geografico(ax, crs); ax.set_xticklabels([]); ax.yaxis.tick_right()
     sm = mpl.cm.ScalarMappable(norm=norma, cmap=hip)
-    cax = ax.inset_axes([0.05, -0.22, 0.55, 0.03])
+    cax = ax.inset_axes([0.05, -0.10, 0.45, 0.03])
     cb = fig.colorbar(sm, cax=cax, orientation="horizontal"); cb.outline.set_linewidth(0.4)
-    cb.set_ticks([0, 1000, 2300, 4000, 5500]); cb.ax.tick_params(labelsize=5.5, length=2)
+    cb.set_ticks([0, 2300, 5500]); cb.ax.tick_params(labelsize=5.5, length=2)
     cb.ax.axvline(2300, color=COL["bloque"], lw=1.2)
-    cb.set_label("Elevation (m)", fontsize=7.44, labelpad=1)
-    ax.legend(handles=[Patch(fc=COL["bloque"], alpha=0.38, ec="none", label="Highland districts (2300 m or more)"),
-                       Line2D([], [], color=TINTA, lw=0.8, label="145 km validation blocks (20 folds)")],
-              loc="lower left", bbox_to_anchor=(0.0, -0.52), frameon=False, fontsize=6.96)
+    cb.set_label("Elevation (m)", fontsize=6.6, labelpad=1)
+    ax.legend(handles=[Patch(fc=COL["bloque"], alpha=0.38, ec="none", label="Highlands (2300 m or more)"),
+                       Line2D([], [], color=TINTA, lw=0.8, label="145 km blocks (20 folds)")],
+              loc="upper left", bbox_to_anchor=(0.0, -0.17), frameon=False, fontsize=6.6)
     ax.set_title("Highlands and validation blocks", loc="left", fontsize=8.4, pad=4)
     ax.annotate("b)", xy=(0, 1), xycoords="axes fraction", xytext=(-6, 4), textcoords="offset points",
                 fontsize=10.8, fontweight="bold", ha="right", va="bottom")
 
     # c: perfil de altitud (altitud en el eje vertical, como el terreno)
-    ax = fig.add_subplot(gs[2])
+    ax = fig.add_subplot(gs[1, 1])
     hb = ax.hexbin(d["frac"], d["altitud_media_m"], gridsize=(14, 22), cmap="mako_r", mincnt=1, linewidths=0.2,
                    edgecolors="white", extent=(0, 0.8, 0, 5000))
     ax.axhline(2300, color=COL["bloque"], lw=0.9, ls=(0, (3, 2)))
     ax.text(0.78, 2380, "Highlands", ha="right", va="bottom", fontsize=6.96, color=COL["bloque"])
     ax.set_xlim(0, 0.8); ax.set_ylim(0, 5000)
     ax.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda v, _: f"{100 * v:.0f}%"))
-    ax.set_xlabel("Records with potato"); ax.set_ylabel("Mean elevation of agricultural land (m)")
+    ax.set_xlabel("Crop records with potato"); ax.set_ylabel("Mean elevation of agricultural land (m)")
     ax.yaxis.set_label_position("right"); ax.yaxis.tick_right()
-    cax = ax.inset_axes([0.05, -0.22, 0.9, 0.03])
+    cax = ax.inset_axes([0.42, 0.10, 0.52, 0.03])
     cb = fig.colorbar(hb, cax=cax, orientation="horizontal"); cb.outline.set_linewidth(0.4)
-    cb.ax.tick_params(labelsize=5.5, length=2); cb.set_label("Districts per cell", fontsize=7.44, labelpad=1)
+    cb.ax.tick_params(labelsize=5.5, length=2); cb.set_label("Districts per cell", fontsize=6.6, labelpad=1)
     ax.set_title("Potato rises with elevation", loc="left", fontsize=8.4, pad=4)
     ax.annotate("c)", xy=(0, 1), xycoords="axes fraction", xytext=(-6, 4), textcoords="offset points",
                 fontsize=10.8, fontweight="bold", ha="right", va="bottom")
     sns.despine(ax=ax, left=True, right=False)
-    fig.canvas.draw()
-    pa = fig.axes[0].get_position(); pc = ax.get_position()
-    ax.set_position([pc.x0 + 0.02, pa.y0, pc.width - 0.02, pa.height])
 
-    # PDF y TIFF sin el globo (Elsevier no admite mapas de ubicación mayores que el área de estudio);
-    # el PNG del README lo lleva en un recuadro.
-    for ext in ("pdf", "tiff"):
-        kw = {"pil_kwargs": {"compression": "tiff_lzw"}} if ext == "tiff" else {"dpi": 300}
+    for ext in ("pdf", "tiff", "png"):
+        kw = {"pil_kwargs": {"compression": "tiff_lzw"}} if ext == "tiff" else ({"dpi": 300} if ext == "pdf" else {})
         fig.savefig(FIG / f"Fig1_area_estudio.{ext}", bbox_inches="tight", pad_inches=0.02, facecolor="white", **kw)
-    globo = FIG / "globo_ubicacion.png"
-    if globo.exists():
-        ins = fig.axes[0].inset_axes([0.0, 0.08, 0.28, 0.28]); ins.imshow(plt.imread(globo)); ins.set_axis_off()
-    fig.savefig(FIG / "Fig1_area_estudio.png", bbox_inches="tight", pad_inches=0.02, facecolor="white")
     plt.close(fig); print("guardada:", FIG / "Fig1_area_estudio")
 
 
