@@ -1,6 +1,6 @@
 # Mapping potato suitability and its uncertainty across the districts of Peru with a calibrated Bayesian model
 
-**Mapping potato suitability and its uncertainty across the districts of Peru with a calibrated Bayesian model** (submitted to *Computers and Electronics in Agriculture*)
+**Mapping potato suitability and its uncertainty across the districts of Peru with a calibrated Bayesian model** (submitted to *Computers and Electronics in Agriculture*, manuscript COMPAG-D-26-12698)
 
 [![Journal](https://img.shields.io/badge/Journal-Computers%20and%20Electronics%20in%20Agriculture%20(Elsevier%2C%20Q1)-E9711C?style=flat-square&logo=elsevier&logoColor=white)](https://www.sciencedirect.com/journal/computers-and-electronics-in-agriculture)
 [![Status](https://img.shields.io/badge/Status-With%20editor-7B1FA2?style=flat-square)](#status)
@@ -146,7 +146,7 @@ The district table combines the IV National Agricultural Census 2012 (INEI), Ter
 | Census application, hypotheses H1, H1b, H2 | Done (all supported) |
 | Sensitivity analyses (7) and spatial confounding check | Done |
 | Figures 1–6 | Done |
-| Manuscript | Submitted to *Computers and Electronics in Agriculture* on 25 November 2026; with the editor |
+| Manuscript | Submitted to *Computers and Electronics in Agriculture* on 25 November 2026 (COMPAG-D-26-12698); with the editor |
 | Data and code on Mendeley Data | [doi:10.17632/mcp876jbyt.1](https://doi.org/10.17632/mcp876jbyt.1) |
 
 ## Citation
